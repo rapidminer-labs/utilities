@@ -1,7 +1,7 @@
 import update_config as config
 import requests
 
-serverurl = "http://partnersrv.rapidminer.com:8080/"
+serverurl = "http://urltoyourserver.com:8080/"
 rtsurl = "http://localhost:8090/"
 username ="username" #Add your rapidminer server user name
 password = "password"  # Add your rapidminer server password
