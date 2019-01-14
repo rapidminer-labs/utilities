@@ -1,34 +1,36 @@
+#!/usr/bin/env python3
+from os.path import expandvars
 import update_config as config
 import requests
 
-serverurl = "http://urltoyourserver.com:8080/"
-rtsurl = "http://localhost:8090/"
-username ="username" #Add your rapidminer server user name
+server_url = "http://urltoyourserver.com:8080/"  # RapidMiner server URL
+rts_url = "http://localhost:8090/"  # Real time scoring agents endpoint
+username ="username"  # Add your rapidminer server user name
 password = "password"  # Add your rapidminer server password
 
-#
-# Path to the files you want to deploy on the rts.
-# Processes which are supposed to be exported as WS should be top level in this folder
-# The endpoints name is always the folder name. If your location is:
-#     /home/user/myproject
-# then the endpoint name is myproject
-#
+"""
+Path to the files you want to deploy on the rts.
+Processes which are supposed to be exported as WS should be top level in this folder
+The endpoints name is always the folder name. If your location is:
+    /home/user/myproject
+then the endpoint name is myproject
+"""
 
-location = "/home/mschmitz/deployments/repository"
-endpointname = location.rsplit('/', 1)[-1]
+location = expandvars("/home/$USER/deployments/repository")
+endpoint_name = location.rsplit('/', 1)[-1]
 
 
 def get_deployment_zip():
     params = (
         ('format', 'webservice'),
     )
-    response = requests.get(serverurl + 'api/rest/resources/' + location, params=params,
+    response = requests.get(server_url + 'api/rest/resources/' + location, params=params,
                             auth=(username, password))
     return response
 
 
 def delete_deployment():
-    response = requests.delete(rtsurl + 'admin/deployments/' + endpointname)
+    response = requests.delete(rts_url + 'admin/deployments/' + endpoint_name)
     return response
 
 
@@ -36,7 +38,7 @@ def put_deployment_zip():
     files = {
         'file': ('deployment.zip', open('deployment.zip', 'rb')),
     }
-    response = requests.post(rtsurl + 'admin/deployments', files=files)
+    response = requests.post(rts_url + 'admin/deployments', files=files)
 
     return response
 
